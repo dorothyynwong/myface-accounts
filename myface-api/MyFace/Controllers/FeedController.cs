@@ -2,6 +2,7 @@
 using MyFace.Models.Request;
 using MyFace.Models.Response;
 using MyFace.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyFace.Controllers
 {
@@ -17,6 +18,7 @@ namespace MyFace.Controllers
         }
 
         [HttpGet("")]
+        [Authorize]
         public ActionResult<FeedModel> GetFeed([FromQuery] FeedSearchRequest searchRequest)
         {
             var posts = _posts.SearchFeed(searchRequest);

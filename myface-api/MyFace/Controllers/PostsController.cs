@@ -2,6 +2,7 @@
 using MyFace.Models.Request;
 using MyFace.Models.Response;
 using MyFace.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyFace.Controllers
 {
@@ -32,8 +33,12 @@ namespace MyFace.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public IActionResult Create([FromBody] CreatePostRequest newPost)
         {
+            // We need to determine that the user is who they are by checking
+            // Basic Auth
+            // Then looking up the user for the password and salt...
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

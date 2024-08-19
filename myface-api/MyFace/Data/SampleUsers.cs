@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Policy;
 using MyFace.Models.Database;
+using MyFace.Repositories;
 using MyFace.Services;
 
 namespace MyFace.Data

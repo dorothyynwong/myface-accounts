@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyFace.Repositories;
 using MyFace.Services;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MyFace
 {
@@ -38,7 +39,12 @@ namespace MyFace
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+
+
+            // services.AddScoped<IUsersService, UsersService>();
             services.AddControllers();
+            services.AddAuthentication("BasicAuthentication")
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             services.AddTransient<IInteractionsRepo, InteractionsRepo>();
             services.AddTransient<IPostsRepo, PostsRepo>();
@@ -62,6 +68,10 @@ namespace MyFace
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseCors(CORS_POLICY_NAME);
 

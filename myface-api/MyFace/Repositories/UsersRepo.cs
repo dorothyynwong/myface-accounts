@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
 using MyFace.Services;
@@ -14,12 +15,14 @@ namespace MyFace.Repositories
         User Create(CreateUserRequest newUser);
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
+        
+        Task<User> Authenticate(string username, string password);
     }
     
     public class UsersRepo : IUsersRepo
     {
         private readonly MyFaceDbContext _context;
-        private readonly UsersService _usersService = new UsersService();
+        private readonly UsersService _usersService;
 
         public UsersRepo(MyFaceDbContext context)
         {
@@ -102,5 +105,34 @@ namespace MyFace.Repositories
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
+
+        
+        public async Task<User> Authenticate(string username, string password)
+        {
+            UserSearchRequest userSearchRequest = new UserSearchRequest();
+            userSearchRequest.Search = username;
+            List<User> users = Search(userSearchRequest).ToList();
+
+            // if (users.Count > 1)
+            // {
+            //     return null;
+            // }
+            // return null if user not found
+
+            if (users.Count > 1 || users == null )
+                return null;
+
+             (var genpassword, var salt) = _usersService.GetHashedPasswordSalt(password);    
+
+            if (users[0].HashedPassword != genpassword)
+                return null;
+
+            // authentication successful so return user details without password
+            users[0].HashedPassword = null;
+
+            return users[0];
+        }
+
+
     }
 }
