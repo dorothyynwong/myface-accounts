@@ -16,7 +16,7 @@ namespace MyFace.Repositories
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
         
-        Task<User> Authenticate(string username, string password);
+        User Authenticate(string username, string password);
     }
     
     public class UsersRepo : IUsersRepo
@@ -105,17 +105,17 @@ namespace MyFace.Repositories
             _context.SaveChanges();
         }
 
-        
-        public async Task<User> Authenticate(string username, string password)
+
+        public User Authenticate(string username, string password)
         {
             UserSearchRequest userSearchRequest = new UserSearchRequest();
             userSearchRequest.Search = username;
             List<User> users = Search(userSearchRequest).ToList();
 
-            if (users.Count > 1 || users == null )
+            if (users.Count > 1 || users == null)
                 return null;
 
-             (var genpassword, var salt) = _usersService.GetHashedPasswordSalt(password, users[0].Salt);    
+            (var genpassword, var salt) = _usersService.GetHashedPasswordSalt(password, users[0].Salt);
 
             if (users[0].HashedPassword != genpassword)
                 return null;
