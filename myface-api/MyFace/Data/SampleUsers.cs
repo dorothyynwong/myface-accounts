@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using MyFace.Models.Database;
+using MyFace.Services;
 
 namespace MyFace.Data
 {
@@ -119,12 +121,16 @@ namespace MyFace.Data
 
         private static User CreateRandomUser(int index)
         {
+            UsersService usersService = new UsersService();
+            (string hash, string salt) = usersService.GetHashedPasswordSalt(Data[index][2]);
             return new User
             {
                 FirstName = Data[index][0],
                 LastName = Data[index][1],
                 Username = Data[index][2],
                 Email = Data[index][3],
+                HashedPassword = hash,
+                Salt = salt,
                 ProfileImageUrl = ImageGenerator.GetProfileImage(Data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
             };

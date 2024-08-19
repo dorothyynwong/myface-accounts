@@ -15,6 +15,10 @@ namespace MyFace.Models.Request
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        [RegularExpression(@"^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)).+$")]
+        public string Password {get; set;}
         
         [Required]
         [StringLength(70)]

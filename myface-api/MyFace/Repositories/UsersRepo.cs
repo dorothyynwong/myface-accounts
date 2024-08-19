@@ -2,6 +2,7 @@
 using System.Linq;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
+using MyFace.Services;
 
 namespace MyFace.Repositories
 {
@@ -18,10 +19,12 @@ namespace MyFace.Repositories
     public class UsersRepo : IUsersRepo
     {
         private readonly MyFaceDbContext _context;
+        private readonly UsersService _usersService = new UsersService();
 
         public UsersRepo(MyFaceDbContext context)
         {
             _context = context;
+            // _usersService = usersService;
         }
         
         public IEnumerable<User> Search(UserSearchRequest search)
@@ -59,12 +62,15 @@ namespace MyFace.Repositories
 
         public User Create(CreateUserRequest newUser)
         {
+            (string hash, string salt) = _usersService.GetHashedPasswordSalt(newUser.Password);
             var insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 Email = newUser.Email,
                 Username = newUser.Username,
+                HashedPassword = hash,
+                Salt = salt,
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
             });
