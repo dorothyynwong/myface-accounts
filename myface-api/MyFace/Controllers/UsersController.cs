@@ -2,6 +2,7 @@
 using MyFace.Models.Request;
 using MyFace.Models.Response;
 using MyFace.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyFace.Controllers
 {
@@ -47,6 +48,7 @@ namespace MyFace.Controllers
         }
 
         [HttpPatch("{id}/update")]
+        [Authorize]
         public ActionResult<UserResponse> Update([FromRoute] int id, [FromBody] UpdateUserRequest update)
         {
             if (!ModelState.IsValid)
@@ -59,6 +61,7 @@ namespace MyFace.Controllers
         }
         
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete([FromRoute] int id)
         {
             _users.Delete(id);

@@ -52,6 +52,7 @@ namespace MyFace.Controllers
         }
 
         [HttpPatch("{id}/update")]
+        [Authorize]
         public ActionResult<PostResponse> Update([FromRoute] int id, [FromBody] UpdatePostRequest update)
         {
             if (!ModelState.IsValid)
@@ -64,6 +65,7 @@ namespace MyFace.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete([FromRoute] int id)
         {
             _posts.Delete(id);
