@@ -22,12 +22,11 @@ namespace MyFace.Repositories
     public class UsersRepo : IUsersRepo
     {
         private readonly MyFaceDbContext _context;
-        private readonly UsersService _usersService;
+        private readonly UsersService _usersService = new UsersService();
 
         public UsersRepo(MyFaceDbContext context)
         {
             _context = context;
-            // _usersService = usersService;
         }
         
         public IEnumerable<User> Search(UserSearchRequest search)
@@ -113,16 +112,10 @@ namespace MyFace.Repositories
             userSearchRequest.Search = username;
             List<User> users = Search(userSearchRequest).ToList();
 
-            // if (users.Count > 1)
-            // {
-            //     return null;
-            // }
-            // return null if user not found
-
             if (users.Count > 1 || users == null )
                 return null;
 
-             (var genpassword, var salt) = _usersService.GetHashedPasswordSalt(password);    
+             (var genpassword, var salt) = _usersService.GetHashedPasswordSalt(password, users[0].Salt);    
 
             if (users[0].HashedPassword != genpassword)
                 return null;

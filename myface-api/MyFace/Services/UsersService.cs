@@ -12,26 +12,25 @@ namespace MyFace.Services
 {
     public interface IUsersService
     {
-        public (string, string) GetHashedPasswordSalt (string password);
-        // public Task<User> Authenticate(string username, string password);
+        public (string, string) GetHashedPasswordSalt (string password, string saltString);
     }
 
     public class UsersService : IUsersService
     {
-        // private readonly IUsersRepo _usersRepo;
-
-        // public UsersService(IUsersRepo usersRepo)
-        // {
-        //     _usersRepo = usersRepo;
-        // }
-
-
-        public (string, string) GetHashedPasswordSalt (string password)
+        
+        public (string, string) GetHashedPasswordSalt (string password, string saltString = "")
         {
             byte[] salt = new byte[128 / 8];
-            using (var rngCsp = new RNGCryptoServiceProvider())
+            if (saltString == "")
             {
-                rngCsp.GetNonZeroBytes(salt);
+                using (var rngCsp = new RNGCryptoServiceProvider())
+                {
+                    rngCsp.GetNonZeroBytes(salt);
+                }
+            }
+            else
+            {
+                salt = Convert.FromBase64String(saltString);
             }
 
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -43,32 +42,6 @@ namespace MyFace.Services
 
             return (hashed, Convert.ToBase64String(salt));
         }
-
-        // public async Task<User> Authenticate(string username, string password)
-        // {
-        //     UserSearchRequest userSearchRequest = new UserSearchRequest();
-        //     userSearchRequest.Search = username;
-        //     List<User> users = _usersRepo.Search(userSearchRequest).ToList();
-
-        //     // if (users.Count > 1)
-        //     // {
-        //     //     return null;
-        //     // }
-        //     // return null if user not found
-
-        //     if (users.Count > 1 || users == null )
-        //         return null;
-
-        //      (var genpassword, var salt) = GetHashedPasswordSalt(password);    
-
-        //     if (users[0].HashedPassword != genpassword)
-        //         return null;
-
-        //     // authentication successful so return user details without password
-        //     users[0].HashedPassword = null;
-
-        //     return users[0];
-        // }
 
     }
    
