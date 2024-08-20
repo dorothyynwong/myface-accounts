@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using MyFace.Models.Database;
 using MyFace.Repositories;
 
 namespace MyFace.Controllers
 {
+    [ApiController]
+    [Route("/login")]
     public class LoginController : ControllerBase
     {
         private readonly IUsersRepo _usersRepo;
@@ -16,26 +17,23 @@ namespace MyFace.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("/login")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public LoginUserResponse Login(LoginUserRequest loginRequest)
+        public IActionResult Login([FromBody] LoginUserRequest loginRequest)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = _usersRepo.Authenticate(loginRequest.Username, loginRequest.Password);
-                if (user is null)
-                {
-                    // return RedirectToAction("Index", "Home");
-                    return null;
-                }
-                // ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                // return View(model);
-                return new LoginUserResponse(user);
+                return Unauthorized();
             }
-            // return View(model);
-            return null;
 
+            var user = _usersRepo.Authenticate(loginRequest.Username, loginRequest.Password);
+            if (user is null)
+            {
+                return Unauthorized();
+            }
+
+            return Accepted(new LoginUserResponse(user));
         }
+
     }
 }

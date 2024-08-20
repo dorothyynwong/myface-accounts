@@ -52,7 +52,7 @@ namespace MyFace.Services
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
                 var username = credentials[0];
                 var password = credentials[1];
-                user = await _usersRepo.Authenticate(username, password);
+                user = _usersRepo.Authenticate(username, password);
             }
 
             catch
