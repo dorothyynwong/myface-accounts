@@ -40,6 +40,8 @@ export interface NewPost {
     message: string;
     imageUrl: string;
     userId: number;
+    username: string;
+    password: string;
 }
 
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
@@ -84,10 +86,10 @@ export async function fetchPostsDislikedBy(page: number, pageSize: number, userI
 export async function createPost(newPost: NewPost) {
     let base64 = require("base-64");
     
-    let username: string = "gantoniazzi1r";
-    let password: string = "gantoniazzi1r";
+    // let username: string = "gantoniazzi1r";
+    // let password: string = "gantoniazzi1r";
 
-    const credientals: string =  base64.encode(`${username}:${password}`);
+    const credientals: string =  base64.encode(`${newPost.username}:${newPost.password}`);
 
     const response = await fetch(`https://localhost:5001/posts/create`, {
         method: "POST",
