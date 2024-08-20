@@ -10,7 +10,7 @@ export function Users(): JSX.Element {
     const [searchTerm, setSearchTerm] = useState("");
     
     function getUsers(page: number, pageSize: number) {
-        return fetchUsers(searchTerm, page, pageSize);
+        return fetchUsers(searchTerm, page, pageSize, );
     }
     
     return (

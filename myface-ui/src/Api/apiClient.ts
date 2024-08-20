@@ -1,4 +1,6 @@
-﻿export interface ListResponse<T> {
+﻿import { LoginContext} from "../Components/LoginManager/LoginManager";
+
+export interface ListResponse<T> {
     items: T[];
     totalNumberOfItems: number;
     page: number;
@@ -41,7 +43,16 @@ export interface NewPost {
 }
 
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
-    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
+    let base64 = require("base-64");
+    let username: string = "gantoniazzi1r";
+    let password: string = "gantoniazzi1r";
+    const credientals: string =  base64.encode(`${username}:${password}`);
+
+    const headers:Headers = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + credientals,
+    });
+    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`, {headers: headers});
     return await response.json();
 }
 
@@ -71,10 +82,18 @@ export async function fetchPostsDislikedBy(page: number, pageSize: number, userI
 }
 
 export async function createPost(newPost: NewPost) {
+    let base64 = require("base-64");
+    
+    let username: string = "gantoniazzi1r";
+    let password: string = "gantoniazzi1r";
+
+    const credientals: string =  base64.encode(`${username}:${password}`);
+
     const response = await fetch(`https://localhost:5001/posts/create`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': "Basic " + credientals,
         },
         body: JSON.stringify(newPost),
     });
@@ -88,7 +107,7 @@ export async function login(username: string, password: string) {
     const response = await fetch(`https://localhost:5001/login`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({"Username" : username, "Password": password}),
     });
