@@ -120,11 +120,6 @@ namespace MyFace.Repositories
             if (users[0].HashedPassword != genpassword)
                 return null;
 
-            // authentication successful so return user details without password
-            // users[0].HashedPassword = null;
-
-            // return users[0];
-
             return new User{
                 Id = users[0].Id,
                 Username = users[0].Username,
