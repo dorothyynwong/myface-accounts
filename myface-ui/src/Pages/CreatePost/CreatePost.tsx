@@ -20,7 +20,7 @@ interface LoginContextProps
 export function CreatePostForm(): JSX.Element {
     const [message, setMessage] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const [userId, setUserId] = useState("");
+    // const [userId, setUserId] = useState("");
     const [status, setStatus] = useState<FormStatus>("READY");
     const { username, password }: LoginContextProps = useContext(LoginContext);
 
@@ -34,8 +34,8 @@ export function CreatePostForm(): JSX.Element {
         let header: HeaderInterface = {crendential: base64.encode(`${username}:${password}`)}
  
         setStatus("SUBMITTING");
-        createPost({message, imageUrl, userId: parseInt(userId)}, header)
-        // createPost({message, imageUrl}, header)
+        // createPost({message, imageUrl, userId: parseInt(userId)}, header)
+        createPost({message, imageUrl}, header)
             .then(() => setStatus("FINISHED"))
             .catch(() => setStatus("ERROR"));
     }
@@ -59,10 +59,10 @@ export function CreatePostForm(): JSX.Element {
                 <input className="form-input" value={imageUrl} onChange={event => setImageUrl(event.target.value)}/>
             </label>
 
-            <label className="form-label">
+            {/* <label className="form-label">
                 User ID
                 <input className="form-input" value={userId} onChange={event => setUserId(event.target.value)}/>
-            </label>
+            </label> */}
 
             <button className="submit-button" disabled={status === "SUBMITTING"} type="submit">Create Post</button>
             {status === "ERROR" && <p>Something went wrong! Please try again.</p>}
