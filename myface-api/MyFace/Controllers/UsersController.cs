@@ -3,6 +3,9 @@ using MyFace.Models.Request;
 using MyFace.Models.Response;
 using MyFace.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Text;
+using MyFace.Helpers;
 
 namespace MyFace.Controllers
 {
@@ -64,6 +67,18 @@ namespace MyFace.Controllers
         [Authorize]
         public IActionResult Delete([FromRoute] int id)
         {
+            
+            string authorizationString = Request.Headers["Authorization"];
+            string credentials = authorizationString.Split(" ")[1];
+            var credentialBytes = Convert.FromBase64String(credentials);
+            string[] decodedCredentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
+
+            var user = _users.Authenticate(decodedCredentials[0], decodedCredentials[1]);
+            if (user == null) return Unauthorized("Invalid user");
+
+            if (user.Role != Role.ADMIN)
+                return Forbid();
+                
             _users.Delete(id);
             return Ok();
         }
