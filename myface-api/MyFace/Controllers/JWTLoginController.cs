@@ -7,7 +7,7 @@ using MyFace.Services;
 namespace MyFace.Controllers
 {
     [ApiController]
-    [Route("/login")]
+    [Route("/jwtlogin")]
     public class JWTLoginController : ControllerBase
     {
         private readonly IUsersRepo _usersRepo;
@@ -21,7 +21,7 @@ namespace MyFace.Controllers
         }
 
 
-        [HttpPost("/login")]
+        [HttpPost("")]
         [AllowAnonymous]
         public IActionResult Login([FromBody] LoginUserRequest loginRequest)
         {

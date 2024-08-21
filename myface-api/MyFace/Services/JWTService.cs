@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,9 +17,7 @@ namespace MyFace.Services
     {
         public string GenerateToken(int userId)
         {
-            var mySecret = "asdv234234^&%&^%&^hjsdfb2%%%";
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
-
+            RSA rsa = RSA.Create(2048);
             var myIssuer = "http://mysite.com";
             var myAudience = "http://myaudience.com";
 
@@ -32,7 +31,7 @@ namespace MyFace.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = myIssuer,
                 Audience = myAudience,
-                SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

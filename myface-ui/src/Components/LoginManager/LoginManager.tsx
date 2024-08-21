@@ -19,7 +19,8 @@ interface LoginResponse {
     firstName: string,
     lastName: string,
     displayName: string,
-    userName: string
+    userName: string,
+    token: string
 }
 
 export function LoginManager(props: LoginManagerProps): JSX.Element {
@@ -29,13 +30,14 @@ export function LoginManager(props: LoginManagerProps): JSX.Element {
     
     function logIn(username: string, password: string) {
         let loginResponse:Promise<LoginResponse> = login(username, password);
-        if (loginResponse != null)
-        {
-            setLoggedIn(true);
-            setUsername(username);
-            setPassword(password);
-            
-        }
+        loginResponse.then(
+            resposne => {
+                setLoggedIn(true);
+                setUsername(username);
+                setPassword(password);
+                localStorage.setItem('authToken', resposne.token);
+            }
+        );
         // if(loggedIn) return <>Login Successful</>
             
     }

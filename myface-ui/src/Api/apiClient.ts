@@ -1,6 +1,4 @@
-﻿import { LoginContext} from "../Components/LoginManager/LoginManager";
-
-export interface ListResponse<T> {
+﻿export interface ListResponse<T> {
     items: T[];
     totalNumberOfItems: number;
     page: number;
@@ -50,16 +48,7 @@ export interface HeaderInterface {
 }
 
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
-    let base64 = require("base-64");
-    let username: string = "gantoniazzi1r";
-    let password: string = "gantoniazzi1r";
-    const credientals: string =  base64.encode(`${username}:${password}`);
-
-    const headers:Headers = new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': "Basic " + credientals,
-    });
-    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`, {headers: headers});
+    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
     return await response.json();
 }
 
@@ -88,15 +77,8 @@ export async function fetchPostsDislikedBy(page: number, pageSize: number, userI
     return await response.json();
 }
 
-// export async function createPost(newPost: NewPost) {
-    export async function createPost(newPost: NewPost, header: HeaderInterface) {
-    let base64 = require("base-64");
-    
-    // let username: string = "rdorcey1k";
-    // let password: string = "rdorcey1k";
 
-    // const credientals: string =  base64.encode(`${username}:${password}`);
-
+export async function createPost(newPost: NewPost, header: HeaderInterface) {
     const response = await fetch(`https://localhost:5001/posts/create`, {
         method: "POST",
         headers: {
