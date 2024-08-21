@@ -121,9 +121,14 @@ namespace MyFace.Repositories
                 return null;
 
             // authentication successful so return user details without password
-            users[0].HashedPassword = null;
+            // users[0].HashedPassword = null;
 
-            return users[0];
+            // return users[0];
+
+            return new User{
+                Id = users[0].Id,
+                Username = users[0].Username,
+            };
         }
 
 

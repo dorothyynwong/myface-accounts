@@ -35,6 +35,7 @@ export function CreatePostForm(): JSX.Element {
  
         setStatus("SUBMITTING");
         createPost({message, imageUrl, userId: parseInt(userId)}, header)
+        // createPost({message, imageUrl}, header)
             .then(() => setStatus("FINISHED"))
             .catch(() => setStatus("ERROR"));
     }
