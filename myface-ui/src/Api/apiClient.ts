@@ -40,8 +40,13 @@ export interface NewPost {
     message: string;
     imageUrl: string;
     userId: number;
-    username: string;
-    password: string;
+    // username: string;
+    // password: string;
+}
+
+export interface HeaderInterface {
+    crendential: string;
+    // userId: string;
 }
 
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
@@ -83,19 +88,20 @@ export async function fetchPostsDislikedBy(page: number, pageSize: number, userI
     return await response.json();
 }
 
-export async function createPost(newPost: NewPost) {
+// export async function createPost(newPost: NewPost) {
+    export async function createPost(newPost: NewPost, header: HeaderInterface) {
     let base64 = require("base-64");
     
-    // let username: string = "gantoniazzi1r";
-    // let password: string = "gantoniazzi1r";
+    // let username: string = "rdorcey1k";
+    // let password: string = "rdorcey1k";
 
-    const credientals: string =  base64.encode(`${newPost.username}:${newPost.password}`);
+    // const credientals: string =  base64.encode(`${username}:${password}`);
 
     const response = await fetch(`https://localhost:5001/posts/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            'Authorization': "Basic " + credientals,
+            'Authorization': "Basic " + header.crendential,
         },
         body: JSON.stringify(newPost),
     });

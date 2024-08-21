@@ -1,6 +1,6 @@
 ﻿import React, {FormEvent, useState, useContext} from "react";
 import {Page} from "../Page/Page";
-import {createPost} from "../../Api/apiClient";
+import {createPost, HeaderInterface} from "../../Api/apiClient";
 import {Link} from "react-router-dom";
 import "./CreatePost.scss";
 import { LoginContext } from "../../Components/LoginManager/LoginManager";
@@ -28,8 +28,13 @@ export function CreatePostForm(): JSX.Element {
         event.preventDefault();
         
  
+        // setStatus("SUBMITTING");
+        // createPost({message, imageUrl, userId: parseInt(userId)})
+        let base64 = require("base-64");
+        let header: HeaderInterface = {crendential: base64.encode(`${username}:${password}`)}
+ 
         setStatus("SUBMITTING");
-        createPost({message, imageUrl, userId: parseInt(userId), username, password})
+        createPost({message, imageUrl, userId: parseInt(userId)}, header)
             .then(() => setStatus("FINISHED"))
             .catch(() => setStatus("ERROR"));
     }
