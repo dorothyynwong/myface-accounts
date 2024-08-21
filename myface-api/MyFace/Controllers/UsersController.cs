@@ -68,12 +68,8 @@ namespace MyFace.Controllers
         public IActionResult Delete([FromRoute] int id)
         {
             
-            string authorizationString = Request.Headers["Authorization"];
-            string credentials = authorizationString.Split(" ")[1];
-            var credentialBytes = Convert.FromBase64String(credentials);
-            string[] decodedCredentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
-
-            var user = _users.Authenticate(decodedCredentials[0], decodedCredentials[1]);
+            (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
+            var user = _users.Authenticate(username, password);
             if (user == null) return Unauthorized("Invalid user");
 
             if (user.Role != Role.ADMIN)

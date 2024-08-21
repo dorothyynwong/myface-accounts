@@ -5,6 +5,7 @@ using MyFace.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Text;
+using MyFace.Helpers;
 
 namespace MyFace.Controllers
 {
@@ -45,17 +46,10 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
             
-            string authorizationString = Request.Headers["Authorization"];
-            string credentials = authorizationString.Split(" ")[1];
-            var credentialBytes = Convert.FromBase64String(credentials);
-            string[] decodedCredentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
-
-            var user = _users.Authenticate(decodedCredentials[0], decodedCredentials[1]);
+            (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
+            var user = _users.Authenticate(username, password);
             if (user == null) return Unauthorized("Invalid user");
 
-            // We need to determine that the user is who they are by checking
-            // Basic Auth
-            // Then looking up the user for the password and salt...
             newPost.UserId = user.Id;
             var post = _posts.Create(newPost);
 
