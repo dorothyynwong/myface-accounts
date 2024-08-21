@@ -4,6 +4,7 @@ using System.Security.Policy;
 using MyFace.Models.Database;
 using MyFace.Repositories;
 using MyFace.Services;
+using MyFace.Helpers;
 
 namespace MyFace.Data
 {
@@ -132,6 +133,7 @@ namespace MyFace.Data
                 Email = Data[index][3],
                 HashedPassword = hash,
                 Salt = salt,
+                Role = index%2==0? Role.ADMIN: Role.MEMBER,
                 ProfileImageUrl = ImageGenerator.GetProfileImage(Data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
             };
