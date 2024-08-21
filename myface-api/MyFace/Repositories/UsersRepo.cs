@@ -128,6 +128,7 @@ namespace MyFace.Repositories
             return new User{
                 Id = users[0].Id,
                 Username = users[0].Username,
+                Role = users[0].Role
             };
         }
 
