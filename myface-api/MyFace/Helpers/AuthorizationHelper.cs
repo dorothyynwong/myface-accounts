@@ -20,5 +20,14 @@ namespace MyFace.Helpers
 
             return (username, password);
         }
+
+        public static string GetCurrentToken(HttpRequest request)
+        {
+            var authHeader = AuthenticationHeaderValue.Parse(request.Headers["Authorization"]);
+            // var bearerBytes = Convert.FromBase64String(authHeader.Parameter);
+            // var bearer = Encoding.UTF8.GetString(bearerBytes);
+
+            return authHeader.Parameter;
+        }
     }
 }
