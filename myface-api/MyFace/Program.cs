@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using MyFace.Data;
 
 namespace MyFace
@@ -13,7 +16,6 @@ namespace MyFace
             var host = CreateHostBuilder(args).Build();
 
             CreateDbIfNotExists(host);
-            
             host.Run();
         }
 

@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MyFace.Services
@@ -15,9 +16,16 @@ namespace MyFace.Services
 
     public class JWTService : IJWTService
     {
+        private readonly KeyStore _keyStore;
+
+        public JWTService(KeyStore keyStore)
+        {
+            _keyStore = keyStore;
+        }
         public string GenerateToken(int userId)
         {
-            RSA rsa = RSA.Create(2048);
+            // RSA rsa = RSA.Create(2048);
+            var mySecurityKey = _keyStore.RsaSecurityKey;
             var myIssuer = "http://mysite.com";
             var myAudience = "http://myaudience.com";
 
@@ -31,7 +39,7 @@ namespace MyFace.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = myIssuer,
                 Audience = myAudience,
-                SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+                SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.RsaSha256)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -40,8 +48,7 @@ namespace MyFace.Services
 
         public bool ValidateCurrentToken(string token)
         {
-            var mySecret = "asdv234234^&%&^%&^hjsdfb2%%%";
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
+            var mySecurityKey = _keyStore.RsaSecurityKey;
 
             var myIssuer = "http://mysite.com";
             var myAudience = "http://myaudience.com";
