@@ -21,21 +21,21 @@ namespace MyFace.Services
 
     {
         private readonly IUsersRepo _usersRepo;
-        private readonly IJWTService _jwtService;
+        // private readonly IJWTService _jwtService;
 
         public BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IJWTService jWTService,
+            // IJWTService jWTService,
             IUsersRepo usersRepo)
             : base(options, logger, encoder, clock)
         {
 
             // _usersService = userService;
             _usersRepo = usersRepo;
-            _jwtService = jWTService;
+            // _jwtService = jWTService;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -51,11 +51,11 @@ namespace MyFace.Services
             try
             {
 
-                // (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
-                // user = _usersRepo.Authenticate(username, password);
+                (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
+                user = _usersRepo.Authenticate(username, password);
 
-                string token = AuthorizationHelper.GetCurrentToken(Request);
-                _jwtService.ValidateCurrentToken(token);
+                // string token = AuthorizationHelper.GetCurrentToken(Request);
+                // _jwtService.ValidateCurrentToken(token);
             }
 
             catch
