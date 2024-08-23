@@ -68,9 +68,6 @@ namespace MyFace.Controllers
         [Authorize]
         public IActionResult Delete([FromRoute] int id)
         {
-            
-            // (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
-            // var user = _users.Authenticate(username, password);
             var user = User;
             if (user == null) return Unauthorized("Invalid user");
 
