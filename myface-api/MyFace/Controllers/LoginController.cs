@@ -26,13 +26,15 @@ namespace MyFace.Controllers
                 return Unauthorized();
             }
 
-            var user = _usersRepo.Authenticate(loginRequest.Username, loginRequest.Password);
+            // var user = _usersRepo.Authenticate(loginRequest.Username, loginRequest.Password);
+            var user = User;
             if (user is null)
             {
                 return Unauthorized();
             }
 
-            return Accepted(new LoginUserResponse(user));
+            // return Accepted(new LoginUserResponse(user));
+            return Accepted(user);
         }
 
     }
