@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Text;
 using MyFace.Helpers;
+using System.Security.Claims;
 
 namespace MyFace.Controllers
 {
@@ -68,11 +69,14 @@ namespace MyFace.Controllers
         public IActionResult Delete([FromRoute] int id)
         {
             
-            (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
-            var user = _users.Authenticate(username, password);
+            // (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
+            // var user = _users.Authenticate(username, password);
+            var user = User;
             if (user == null) return Unauthorized("Invalid user");
 
-            if (user.Role != Role.ADMIN)
+            Role role = (Role)Enum.Parse(typeof(Role), user.FindFirst(ClaimTypes.Role)?.Value);
+
+            if (role != Role.ADMIN)
                 return Forbid();
                 
             _users.Delete(id);

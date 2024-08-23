@@ -5,12 +5,13 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using MyFace.Helpers;
 
 namespace MyFace.Services
 {
     public interface IJWTService
     {
-        public string GenerateToken(int userId);
+        public string GenerateToken(int userId, Role role);
         public ClaimsPrincipal ValidateCurrentToken(string token);
     }
 
@@ -22,7 +23,7 @@ namespace MyFace.Services
         {
             _keyStore = keyStore;
         }
-        public string GenerateToken(int userId)
+        public string GenerateToken(int userId, Role role)
         {
             // RSA rsa = RSA.Create(2048);
             var mySecurityKey = _keyStore.RsaSecurityKey;
@@ -35,6 +36,7 @@ namespace MyFace.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Role, role.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = myIssuer,

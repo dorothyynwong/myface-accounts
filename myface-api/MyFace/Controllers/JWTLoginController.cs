@@ -36,7 +36,7 @@ namespace MyFace.Controllers
                 return Unauthorized();
             }
 
-            string token = _jWTService.GenerateToken(user.Id);
+            string token = _jWTService.GenerateToken(user.Id, user.Role);
 
             return Accepted(new JWTLoginUserResponse(user, token));
         }
