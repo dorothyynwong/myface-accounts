@@ -1,5 +1,5 @@
 ﻿import React, {createContext, ReactNode, useState, useContext} from "react";
-import {login} from "./../../Api/apiClient";
+import {login, jwtlogin} from "./../../Api/apiClient";
 
 export const LoginContext = createContext({
     isLoggedIn: false,
@@ -29,7 +29,7 @@ export function LoginManager(props: LoginManagerProps): JSX.Element {
     const [password, setPassword] = useState("");
     
     function logIn(username: string, password: string) {
-        let loginResponse:Promise<LoginResponse> = login(username, password);
+        let loginResponse:Promise<LoginResponse> = jwtlogin(username, password);
         loginResponse.then(
             resposne => {
                 setLoggedIn(true);

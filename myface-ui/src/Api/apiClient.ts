@@ -47,44 +47,62 @@ export interface HeaderInterface {
     // userId: string;
 }
 
+async function apiRequest(url: string, options: RequestInit = {}): Promise<Response> {
+    const token = localStorage.getItem('authToken');
+    const headers = {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
+
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+
+    if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    return response;
+}
+
+
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
-    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
+    const response = await apiRequest(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
     return await response.json();
 }
 
 export async function fetchUser(userId: string | number): Promise<User> {
-    const response = await fetch(`https://localhost:5001/users/${userId}`);
+    const response = await apiRequest(`https://localhost:5001/users/${userId}`);
     return await response.json();
 }
 
 export async function fetchPosts(page: number, pageSize: number): Promise<ListResponse<Post>> {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}`);
+    const response = await apiRequest(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}`);
     return await response.json();
 }
 
 export async function fetchPostsForUser(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&postedBy=${userId}`);
+    const response = await apiRequest(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&postedBy=${userId}`);
     return await response.json();
 }
 
 export async function fetchPostsLikedBy(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&likedBy=${userId}`);
+    const response = await apiRequest(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&likedBy=${userId}`);
     return await response.json();
 }
 
 export async function fetchPostsDislikedBy(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&dislikedBy=${userId}`);
+    const response = await apiRequest(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&dislikedBy=${userId}`);
     return await response.json();
 }
 
 
-export async function createPost(newPost: NewPost, header: HeaderInterface) {
-    const response = await fetch(`https://localhost:5001/posts/create`, {
+// export async function createPost(newPost: NewPost, header: HeaderInterface) {
+export async function createPost(newPost: NewPost) {
+    const response = await apiRequest(`https://localhost:5001/posts/create`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            'Authorization': "Basic " + header.crendential,
-        },
         body: JSON.stringify(newPost),
     });
     
@@ -94,11 +112,22 @@ export async function createPost(newPost: NewPost, header: HeaderInterface) {
 }
 
 export async function login(username: string, password: string) {
-    const response = await fetch(`https://localhost:5001/login`, {
+    const response = await apiRequest(`https://localhost:5001/login`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: JSON.stringify({"Username" : username, "Password": password}),
+    });
+    
+    if (!response.ok) {
+        throw new Error(await response.json())
+    }
+
+    return await response.json();
+}
+
+export async function jwtlogin(username: string, password: string) {
+    var token = localStorage.getItem('authToken');
+    const response = await apiRequest(`https://localhost:5001/jwtlogin`, {
+        method: "POST",
         body: JSON.stringify({"Username" : username, "Password": password}),
     });
     

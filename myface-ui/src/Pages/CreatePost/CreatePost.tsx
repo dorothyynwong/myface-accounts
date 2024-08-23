@@ -30,12 +30,13 @@ export function CreatePostForm(): JSX.Element {
  
         // setStatus("SUBMITTING");
         // createPost({message, imageUrl, userId: parseInt(userId)})
-        let base64 = require("base-64");
-        let header: HeaderInterface = {crendential: base64.encode(`${username}:${password}`)}
+        // let base64 = require("base-64");
+        // let header: HeaderInterface = {crendential: base64.encode(`${username}:${password}`)}
  
         setStatus("SUBMITTING");
         // createPost({message, imageUrl, userId: parseInt(userId)}, header)
-        createPost({message, imageUrl}, header)
+        // createPost({message, imageUrl}, header)
+        createPost({message, imageUrl})
             .then(() => setStatus("FINISHED"))
             .catch(() => setStatus("ERROR"));
     }
