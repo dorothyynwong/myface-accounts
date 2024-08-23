@@ -11,7 +11,7 @@ namespace MyFace.Services
     public interface IJWTService
     {
         public string GenerateToken(int userId);
-        public bool ValidateCurrentToken(string token);
+        public ClaimsPrincipal ValidateCurrentToken(string token);
     }
 
     public class JWTService : IJWTService
@@ -46,7 +46,7 @@ namespace MyFace.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public bool ValidateCurrentToken(string token)
+        public ClaimsPrincipal ValidateCurrentToken(string token)
         {
             var mySecurityKey = _keyStore.RsaSecurityKey;
 
@@ -56,7 +56,7 @@ namespace MyFace.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
@@ -65,12 +65,12 @@ namespace MyFace.Services
                     ValidAudience = myAudience,
                     IssuerSigningKey = mySecurityKey
                 }, out SecurityToken validatedToken);
+                return principal;
             }
             catch
             {
-                return false;
+                return null;
             }
-            return true;
         }
 
     }

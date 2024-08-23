@@ -42,8 +42,8 @@ namespace MyFace
 
 
             services.AddControllers();
-            services.AddAuthentication("BasicAuthentication")
-            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            services.AddAuthentication("JWTAuthentication")
+            .AddScheme<AuthenticationSchemeOptions, JWTAuthenticationHandler>("JWTAuthentication", null);
 
             services.AddTransient<IInteractionsRepo, InteractionsRepo>();
             services.AddTransient<IPostsRepo, PostsRepo>();

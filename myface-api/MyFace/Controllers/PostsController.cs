@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Text;
 using MyFace.Helpers;
+using System.Security.Claims;
 
 namespace MyFace.Controllers
 {
@@ -46,11 +47,13 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
             
-            (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
-            var user = _users.Authenticate(username, password);
+            // (string username, string password) = AuthorizationHelper.GetUserAndPasswordAuthorizationHeader(Request);
+            // var user = _users.Authenticate(username, password);
+            var user = User;
             if (user == null) return Unauthorized("Invalid user");
 
-            newPost.UserId = user.Id;
+            // newPost.UserId = user.Id;
+            newPost.UserId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var post = _posts.Create(newPost);
 
             var url = Url.Action("GetById", new { id = post.Id });
