@@ -12,3 +12,6 @@ If Rider doesn't automatically pick up the start config, you should be able to f
 
 Entity Framework will automatically generate the database for you, and it is populated in code (see Data).
 If you need to trigger the database to be recreated, the easiest way is just to delete the `myface.db` file.
+
+## Authorisation (TODO)
+Currently still using Role in Database for authorisation, need to use JWT instead
